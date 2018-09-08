@@ -39,4 +39,101 @@ class ArticleService {
         }.resume()
     }
     
+    func insertArticle(article: Article) {
+        var request = URLRequest(url: URL(string: ARTICLE_URL)!)
+        
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("Basic QU1TQVBJQURNSU46QU1TQVBJUEBTU1dPUkQ=", forHTTPHeaderField: "Authorization")
+        
+        let articleDict: [String: Any] = [
+            "TITLE": article.title!,
+            "DESCRIPTION": article.description!,
+            "AUTHOR": 1,
+            "CATEGORY_ID": 1,
+            "STATUS": "true",
+            "IMAGE": article.image!
+        ]
+        
+        let articleData = try? JSONSerialization.data(withJSONObject: articleDict, options: [])
+        
+        request.httpBody = articleData
+        
+        let session = URLSession.shared
+        
+        session.dataTask(with: request) { (data, response, error) in
+            if error == nil {
+                let json = try? JSON(data: data!)
+                let message = json!["MESSAGE"].string
+                self.delegate?.responseMessage(message: message!)
+            }
+        }.resume()
+        
+    }
+    
+    
+    func deleteArticle(id: Int) {
+        var request = URLRequest(url: URL(string: "\(ARTICLE_URL)/\(id)")!)
+        
+        request.httpMethod = "DELETE"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("Basic QU1TQVBJQURNSU46QU1TQVBJUEBTU1dPUkQ=", forHTTPHeaderField: "Authorization")
+        
+        let session = URLSession.shared
+        
+        session.dataTask(with: request) { (data, response, error) in
+            if error == nil {
+                let json = try? JSON(data: data!)
+                let message = json!["MESSAGE"].string
+                self.delegate?.responseMessage(message: message!)
+            }
+        }.resume()
+    }
+    
+    func updateArticle(article: Article) {
+        var request = URLRequest(url: URL(string: "\(ARTICLE_URL)/\(article.id!)")!)
+        
+        request.httpMethod = "PUT"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("Basic QU1TQVBJQURNSU46QU1TQVBJUEBTU1dPUkQ=", forHTTPHeaderField: "Authorization")
+        
+        let articleDict: [String: Any] = [
+            "TITLE": article.title!,
+            "DESCRIPTION": article.description!,
+            "AUTHOR": 1,
+            "CATEGORY_ID": 1,
+            "STATUS": "true",
+            "IMAGE": article.image!
+        ]
+        
+        let articleData = try? JSONSerialization.data(withJSONObject: articleDict, options: [])
+        
+        request.httpBody = articleData
+        
+        let session = URLSession.shared
+        
+        session.dataTask(with: request) { (data, response, error) in
+            if error == nil {
+                let json = try? JSON(data: data!)
+                let message = json!["MESSAGE"].string
+                self.delegate?.responseMessage(message: message!)
+            }
+        }.resume()
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+

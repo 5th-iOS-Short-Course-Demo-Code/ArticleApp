@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0725D6A52143656B008907DB /* AddArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0725D6A42143656B008907DB /* AddArticleViewController.swift */; };
 		076F6AA32132387F00B60F64 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076F6AA22132387F00B60F64 /* AppDelegate.swift */; };
 		076F6AA52132387F00B60F64 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076F6AA42132387F00B60F64 /* ViewController.swift */; };
 		076F6AA82132387F00B60F64 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 076F6AA62132387F00B60F64 /* Main.storyboard */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0725D6A42143656B008907DB /* AddArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddArticleViewController.swift; sourceTree = "<group>"; };
 		076F6A9F2132387F00B60F64 /* ArticleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArticleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		076F6AA22132387F00B60F64 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		076F6AA42132387F00B60F64 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 			children = (
 				076F6AC82132595300B60F64 /* Table Cell */,
 				076F6AA42132387F00B60F64 /* ViewController.swift */,
+				0725D6A42143656B008907DB /* AddArticleViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				076F6AA52132387F00B60F64 /* ViewController.swift in Sources */,
+				0725D6A52143656B008907DB /* AddArticleViewController.swift in Sources */,
 				076F6AC72132594E00B60F64 /* ArticleTableViewCell.swift in Sources */,
 				076F6AA32132387F00B60F64 /* AppDelegate.swift in Sources */,
 				076F6ABB21323E6000B60F64 /* ArticleService.swift in Sources */,

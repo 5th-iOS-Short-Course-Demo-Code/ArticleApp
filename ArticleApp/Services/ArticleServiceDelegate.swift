@@ -10,4 +10,5 @@ import Foundation
 
 protocol ArticleServiceDelegate {
     func responseArticles(articles: [Article])
+    func responseMessage(message: String)
 }

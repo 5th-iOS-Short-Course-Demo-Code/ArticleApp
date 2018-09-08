@@ -22,8 +22,24 @@ class ArticlePresenter: ArticleServiceDelegate {
         articleService?.getArticles(page: page, limit: limit)
     }
     
+    func insertArticle(article: Article) {
+        articleService?.insertArticle(article: article)
+    }
+    
+    func deleteArticle(id: Int) {
+        articleService?.deleteArticle(id: id)
+    }
+    
+    func updateArticle(article: Article) {
+        articleService?.updateArticle(article: article)
+    }
+    
     func responseArticles(articles: [Article]) {
         self.delegate?.responseArticles(articles: articles)
+    }
+    
+    func responseMessage(message: String) {
+        self.delegate?.responseMessage(messaeg: message)
     }
     
 }
