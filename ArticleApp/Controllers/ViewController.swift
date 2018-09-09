@@ -33,9 +33,6 @@ class ViewController: UIViewController, ArticlePresenterDelegate, UITableViewDel
     }
 
     func responseArticles(articles: [Article]) {
-//        for article in articles {
-//            print(article.title!)
-//        }
         self.articles = articles
         SVProgressHUD.dismiss()
         DispatchQueue.main.async {

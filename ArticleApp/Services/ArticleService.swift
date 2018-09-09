@@ -137,6 +137,7 @@ class ArticleService {
 class ArticleService {
     
     let ARTICLE_URL = "http://35.240.238.182:8080/v1/api/articles"
+    let UPLOAD_URL = "http://35.240.238.182:8080/v1/api/uploadfile/single"
     let HEADERS = [
         "Authorization": "Basic QU1TQVBJQURNSU46QU1TQVBJUEBTU1dPUkQ=",
         "Accept": "application/json",
@@ -212,6 +213,32 @@ class ArticleService {
                 self.delegate?.responseMessage(message: message!)
             }
         }
+    }
+    
+    func uploadImage(data: Data, article: Article) {
+        
+        Alamofire.upload(multipartFormData: { (formData) in
+            formData.append(data, withName: "FILE", fileName: ".jpg", mimeType: "image/*")
+        }, to: UPLOAD_URL, method: .post, headers: HEADERS) { (result) in
+            switch result {
+            case .success(request: let upload, streamingFromDisk: _, streamFileURL: _):
+                upload.responseJSON(completionHandler: { (response) in
+                    let json = try? JSON(data: response.data!)
+                    let imageUrl = json!["DATA"].string
+                    article.image = imageUrl!
+                    
+                    if article.id == 0 {
+                        self.insertArticle(article: article)
+                    } else {
+                        self.updateArticle(article: article)
+                    }
+                })
+                
+            case .failure(let error):
+                print("ERROR UPLOAD:", error)
+            }
+        }
+        
     }
     
 }

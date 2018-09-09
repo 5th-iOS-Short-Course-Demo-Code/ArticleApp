@@ -34,6 +34,10 @@ class ArticlePresenter: ArticleServiceDelegate {
         articleService?.updateArticle(article: article)
     }
     
+    func uploadImage(data: Data, article: Article) {
+        articleService?.uploadImage(data: data, article: article)
+    }
+    
     func responseArticles(articles: [Article]) {
         self.delegate?.responseArticles(articles: articles)
     }
