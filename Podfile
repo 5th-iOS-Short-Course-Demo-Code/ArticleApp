@@ -9,5 +9,6 @@ target 'ArticleApp' do
   pod 'SwiftyJSON', '~> 4.0'
   pod 'Kingfisher'
   pod 'SVProgressHUD'
+  pod 'Alamofire', '~> 4.7.3'
 
 end

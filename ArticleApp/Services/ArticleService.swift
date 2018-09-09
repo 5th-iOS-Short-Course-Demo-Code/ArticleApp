@@ -8,7 +8,11 @@
 
 import Foundation
 import SwiftyJSON
+import Alamofire
 
+/*
+
+// Request URL using URLSession
 class ArticleService {
     
     let ARTICLE_URL = "http://35.240.238.182:8080/v1/api/articles"
@@ -126,6 +130,91 @@ class ArticleService {
     
 }
 
+*/
+
+
+// Request URL using Alamofire
+class ArticleService {
+    
+    let ARTICLE_URL = "http://35.240.238.182:8080/v1/api/articles"
+    let HEADERS = [
+        "Authorization": "Basic QU1TQVBJQURNSU46QU1TQVBJUEBTU1dPUkQ=",
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    ]
+    
+    var delegate: ArticleServiceDelegate?
+    
+    func getArticles(page: Int, limit: Int) {
+        
+        Alamofire.request("\(ARTICLE_URL)?page=\(page)&limit=\(limit)", method: .get, parameters: nil, encoding: JSONEncoding.default, headers: HEADERS).responseJSON { (response) in
+            if response.result.isSuccess {
+                let json = try? JSON(data: response.data!)
+                let articleJsonArray = json!["DATA"].array
+                
+                var articles = [Article]()
+                for articleJson in articleJsonArray! {
+                    articles.append(Article(json: articleJson))
+                }
+                self.delegate?.responseArticles(articles: articles)
+            }
+        }
+        
+    }
+    
+    func insertArticle(article: Article) {
+        
+        let params: [String: Any] = [
+            "TITLE": article.title!,
+            "DESCRIPTION": article.description!,
+            "AUTHOR": 1,
+            "CATEGORY_ID": 1,
+            "STATUS": "true",
+            "IMAGE": article.image!
+        ]
+        
+        Alamofire.request(ARTICLE_URL, method: .post, parameters: params, encoding: JSONEncoding.default, headers: HEADERS).responseJSON { (response) in
+            if response.result.isSuccess {
+                let json = try? JSON(data: response.data!)
+                let message = json!["MESSAGE"].string
+                self.delegate?.responseMessage(message: message!)
+            }
+        }
+        
+    }
+    
+    
+    func deleteArticle(id: Int) {
+        
+        Alamofire.request("\(ARTICLE_URL)/\(id)", method: .delete, parameters: nil, encoding: JSONEncoding.default, headers: HEADERS).responseJSON { (response) in
+            if response.result.isSuccess {
+                let json = try? JSON(data: response.data!)
+                let message = json!["MESSAGE"].string
+                self.delegate?.responseMessage(message: message!)
+            }
+        }
+    }
+    
+    func updateArticle(article: Article) {
+        let params: [String: Any] = [
+            "TITLE": article.title!,
+            "DESCRIPTION": article.description!,
+            "AUTHOR": 1,
+            "CATEGORY_ID": 1,
+            "STATUS": "true",
+            "IMAGE": article.image!
+        ]
+        
+        Alamofire.request("\(ARTICLE_URL)/\(article.id!)", method: .put, parameters: params, encoding: JSONEncoding.default, headers: HEADERS).responseJSON { (response) in
+            if response.result.isSuccess {
+                let json = try? JSON(data: response.data!)
+                let message = json!["MESSAGE"].string
+                self.delegate?.responseMessage(message: message!)
+            }
+        }
+    }
+    
+}
 
 
 
