@@ -136,13 +136,9 @@ class ArticleService {
 // Request URL using Alamofire
 class ArticleService {
     
-    let ARTICLE_URL = "http://35.240.238.182:8080/v1/api/articles"
-    let UPLOAD_URL = "http://35.240.238.182:8080/v1/api/uploadfile/single"
-    let HEADERS = [
-        "Authorization": "Basic QU1TQVBJQURNSU46QU1TQVBJUEBTU1dPUkQ=",
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-    ]
+    let ARTICLE_URL = APIManager.ARTICLE_URL
+    let UPLOAD_URL = APIManager.UPLOAD_URL
+    let HEADERS = APIManager.HEADERS
     
     var delegate: ArticleServiceDelegate?
     
@@ -178,7 +174,8 @@ class ArticleService {
             if response.result.isSuccess {
                 let json = try? JSON(data: response.data!)
                 let message = json!["MESSAGE"].string
-                self.delegate?.responseMessage(message: message!)
+                let article = Article(json: json!["DATA"])
+                self.delegate?.responseMessage(message: message!, article: article)
             }
         }
         
@@ -191,7 +188,7 @@ class ArticleService {
             if response.result.isSuccess {
                 let json = try? JSON(data: response.data!)
                 let message = json!["MESSAGE"].string
-                self.delegate?.responseMessage(message: message!)
+                self.delegate?.responseMessage(message: message!, article: Article())
             }
         }
     }
@@ -210,7 +207,8 @@ class ArticleService {
             if response.result.isSuccess {
                 let json = try? JSON(data: response.data!)
                 let message = json!["MESSAGE"].string
-                self.delegate?.responseMessage(message: message!)
+                let article = Article(json: json!["DATA"])
+                self.delegate?.responseMessage(message: message!, article: article)
             }
         }
     }

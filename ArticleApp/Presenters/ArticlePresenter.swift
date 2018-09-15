@@ -42,8 +42,8 @@ class ArticlePresenter: ArticleServiceDelegate {
         self.delegate?.responseArticles(articles: articles)
     }
     
-    func responseMessage(message: String) {
-        self.delegate?.responseMessage(messaeg: message)
+    func responseMessage(message: String, article: Article) {
+        self.delegate?.responseMessage(messaeg: message, article: article)
     }
     
 }

@@ -17,36 +17,77 @@ class ViewController: UIViewController, ArticlePresenterDelegate, UITableViewDel
     
     var articles = [Article]()
     
+    var newFetch = false
+    var page = 1
+    var countResponseArticle = 0
+    
+    // Loading at table view footer when scrolling
+    var loadMore = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    
+    // Loading pull to refresh
+    var refreshControl = UIRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         articlePresenter = ArticlePresenter()
         articlePresenter?.delegate = self
         
+        tableView.tableFooterView = loadMore
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refreshArticle), for: .valueChanged)
+        
+        SVProgressHUD.show()
+        articlePresenter?.getArticles(page: page, limit: 30)
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(checkArticleChanged), name: NSNotification.Name("articleChanged"), object: nil)
+        
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        SVProgressHUD.show()
-        articlePresenter?.getArticles(page: 1, limit: 30)
+    @objc func checkArticleChanged(notification: NSNotification) {
+        let article = notification.userInfo!["article"] as! Article
+        
+        for i in 0...self.articles.count-1 {
+            if articles[i].id == article.id {
+                articles[i].title = article.title
+                articles[i].description = article.description
+                articles[i].image = article.image
+                tableView.reloadData()
+                return
+            }
+        }
+        articles.insert(article, at: 0)
+        tableView.reloadData()
+        tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
     }
-
+    
+    @objc func refreshArticle() {
+        page = 1
+        articles = []
+        SVProgressHUD.show()
+        articlePresenter?.getArticles(page: page, limit: 15)
+    }
+    
     func responseArticles(articles: [Article]) {
-        self.articles = articles
+        countResponseArticle = articles.count
+        self.articles += articles
         SVProgressHUD.dismiss()
+        refreshControl.endRefreshing()
+        loadMore.stopAnimating()
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
     
-    func responseMessage(messaeg: String) {
+    func responseMessage(messaeg: String, article: Article) {
         let alert = UIAlertController(title: messaeg, message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
             SVProgressHUD.show()
-            self.articlePresenter?.getArticles(page: 1, limit: 30)
+            self.articlePresenter?.getArticles(page: self.page, limit: 30)
         }
     }
     
@@ -65,17 +106,14 @@ class ViewController: UIViewController, ArticlePresenterDelegate, UITableViewDel
         
         let edit = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
             // edit article code goes here
-            let alert = UIAlertController(title: "Update Article", message: nil, preferredStyle: .alert)
-            alert.addTextField(configurationHandler: { (textField) in
-                textField.placeholder = "New Title"
-                textField.text = self.articles[indexPath.row].title
-            })
+            let dest = self.storyboard?.instantiateViewController(withIdentifier: "AddArticleStoryboard") as! AddArticleViewController
             
-            alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { (action) in
-                self.articles[indexPath.row].title = alert.textFields?.first?.text
-                self.articlePresenter?.updateArticle(article: self.articles[indexPath.row])
-            }))
-            self.present(alert, animated: true, completion: nil)
+            dest.articleId = self.articles[indexPath.row].id!
+            dest.articleImage = self.articles[indexPath.row].image
+            dest.articleTitle = self.articles[indexPath.row].title
+            dest.articleDescription = self.articles[indexPath.row].description
+            
+            self.navigationController?.pushViewController(dest, animated: true)
         }
         
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
@@ -87,6 +125,46 @@ class ViewController: UIViewController, ArticlePresenterDelegate, UITableViewDel
         
         return [delete, edit]
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        newFetch = false
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        newFetch = true
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        if decelerate && newFetch && scrollView.contentOffset.y >= 0 && countResponseArticle > 0 {
+            page = page + 1
+            self.articlePresenter?.getArticles(page: page, limit: 15)
+            loadMore.startAnimating()
+            print(page)
+            newFetch = false
+        } else if !decelerate {
+            newFetch = false
+        }
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

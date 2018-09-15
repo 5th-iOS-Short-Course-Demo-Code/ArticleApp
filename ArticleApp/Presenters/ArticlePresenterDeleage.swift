@@ -10,5 +10,5 @@ import Foundation
 
 protocol ArticlePresenterDelegate {
     func responseArticles(articles: [Article])
-    func responseMessage(messaeg: String)
+    func responseMessage(messaeg: String, article: Article)
 }

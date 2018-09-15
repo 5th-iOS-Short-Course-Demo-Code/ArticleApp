@@ -103,7 +103,7 @@
         <!--Add Article-->
         <scene sceneID="fQy-bo-rel">
             <objects>
-                <viewController title="Add Article" id="RwI-t5-TFo" customClass="AddArticleViewController" customModule="ArticleApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AddArticleStoryboard" title="Add Article" id="RwI-t5-TFo" customClass="AddArticleViewController" customModule="ArticleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="coI-iO-9uX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
